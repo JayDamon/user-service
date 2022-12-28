@@ -23,9 +23,13 @@ func (a *App) Initialize(config *config.Config) {
 		Addr:    fmt.Sprintf(":%s", config.HostPort),
 		Handler: routes.CreateRoutes(a.Broker),
 	}
+	a.DB = connectToDB(config)
 }
 
 func (a *App) Run() {
+
+	defer a.DB.Close()
+
 	err := a.Server.ListenAndServe()
 	if err != nil {
 		log.Panic(err)
