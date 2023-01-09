@@ -7,6 +7,9 @@ import (
 	"time"
 
 	"github.com/factotum/moneymaker/user-service/pkg/config"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -25,7 +28,7 @@ func connectToDB(config *config.Config) *sql.DB {
 			log.Println("Postgres not yet ready ...")
 			counts++
 		} else {
-			log.Println("Connecte to Postgres!")
+			log.Println("Connected to Postgres!")
 			return db
 		}
 
@@ -38,4 +41,18 @@ func connectToDB(config *config.Config) *sql.DB {
 		time.Sleep(2 * time.Second)
 		continue
 	}
+}
+
+func performDbMigration(db *sql.DB, config *config.Config) {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		log.Panic(err)
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://db/migrations",
+		config.DB.Name, driver)
+	if err != nil {
+		log.Panic(err)
+	}
+	m.Up()
 }

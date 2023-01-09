@@ -23,9 +23,8 @@ type DBConfig struct {
 }
 
 func GetConfig() *Config {
-
 	return &Config{
-		HostPort: "3000",
+		HostPort: "8091",
 		DB:       configureDB(),
 	}
 }

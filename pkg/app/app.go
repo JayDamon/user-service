@@ -24,6 +24,7 @@ func (a *App) Initialize(config *config.Config) {
 		Handler: routes.CreateRoutes(a.Broker),
 	}
 	a.DB = connectToDB(config)
+	performDbMigration(a.DB, config)
 }
 
 func (a *App) Run() {
