@@ -1,3 +1,5 @@
 DROP EXTENSION "uuid-ossp";
 
-DROP TABLE user;
+DROP TABLE IF EXISTS user_plaid_access;
+
+DROP TABLE IF EXISTS user;

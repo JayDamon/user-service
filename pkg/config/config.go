@@ -53,7 +53,7 @@ func configureDB() *DBConfig {
 }
 
 func getOrDefault(envVar string, defaultVal string) string {
-	val := os.Getenv("DB_PORT")
+	val := os.Getenv(envVar)
 	if val == "" {
 		return defaultVal
 	}

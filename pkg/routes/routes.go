@@ -3,12 +3,14 @@ package routes
 import (
 	"net/http"
 
+	"github.com/factotum/moneymaker/user-service/pkg/config"
+	"github.com/factotum/moneymaker/user-service/pkg/user"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 )
 
-func CreateRoutes(handlerFn http.HandlerFunc) http.Handler {
+func CreateRoutes(context *config.Context) http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(cors.Handler(cors.Options{
@@ -22,11 +24,11 @@ func CreateRoutes(handlerFn http.HandlerFunc) http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	addRoutes(mux, handlerFn)
+	addRoutes(mux, context)
 
 	return mux
 }
 
-func addRoutes(mux *chi.Mux, handlerFn http.HandlerFunc) {
-	mux.Post("/users", handlerFn)
+func addRoutes(mux *chi.Mux, context *config.Context) {
+	user.AddRoutes(mux, context)
 }

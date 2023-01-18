@@ -1,7 +1,6 @@
 package app
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,23 +12,28 @@ import (
 )
 
 type App struct {
-	Router *chi.Mux
-	Server *http.Server
-	DB     *sql.DB
+	Router  *chi.Mux
+	Server  *http.Server
+	Context *config.Context
 }
 
-func (a *App) Initialize(config *config.Config) {
-	a.Server = &http.Server{
-		Addr:    fmt.Sprintf(":%s", config.HostPort),
-		Handler: routes.CreateRoutes(a.Broker),
+func (a *App) Initialize(configuration *config.Config) {
+	db := connectToDB(configuration)
+
+	a.Context = &config.Context{
+		DB:     db,
+		Config: configuration,
 	}
-	a.DB = connectToDB(config)
-	performDbMigration(a.DB, config)
+	a.Server = &http.Server{
+		Addr:    fmt.Sprintf(":%s", configuration.HostPort),
+		Handler: routes.CreateRoutes(a.Context),
+	}
+	performDbMigration(db, configuration)
 }
 
 func (a *App) Run() {
 
-	defer a.DB.Close()
+	defer a.Context.DB.Close()
 
 	err := a.Server.ListenAndServe()
 	if err != nil {
