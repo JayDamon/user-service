@@ -1,19 +1,20 @@
 package routes
 
 import (
+	"github.com/factotum/moneymaker/user-service/pkg/config"
+	"github.com/jaydamon/moneymakergocloak"
 	"net/http"
 
-	"github.com/factotum/moneymaker/user-service/pkg/config"
 	"github.com/factotum/moneymaker/user-service/pkg/user"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 )
 
-func CreateRoutes(context *config.Context) http.Handler {
-	mux := chi.NewRouter()
+func CreateRoutes(config *config.Config, handler *user.Handler) http.Handler {
+	router := chi.NewRouter()
 
-	mux.Use(cors.Handler(cors.Options{
+	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -22,13 +23,11 @@ func CreateRoutes(context *config.Context) http.Handler {
 		MaxAge:           300,
 	}))
 
-	mux.Use(middleware.Heartbeat("/ping"))
+	keyCloakMiddleware := moneymakergocloak.NewMiddleWare(config.KeyCloakConfig)
+	router.Use(keyCloakMiddleware.VerifyToken)
+	router.Use(middleware.Heartbeat("/ping"))
 
-	addRoutes(mux, context)
+	user.AddRoutes(router, handler)
 
-	return mux
-}
-
-func addRoutes(mux *chi.Mux, context *config.Context) {
-	user.AddRoutes(mux, context)
+	return router
 }

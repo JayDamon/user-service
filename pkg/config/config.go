@@ -2,14 +2,16 @@ package config
 
 import (
 	"fmt"
+	"github.com/jaydamon/moneymakergocloak"
 	"log"
 	"os"
 	"strconv"
 )
 
 type Config struct {
-	HostPort string
-	DB       *DBConfig
+	HostPort       string
+	DB             *DBConfig
+	KeyCloakConfig *moneymakergocloak.Configuration
 }
 
 type DBConfig struct {
@@ -24,8 +26,9 @@ type DBConfig struct {
 
 func GetConfig() *Config {
 	return &Config{
-		HostPort: "8091",
-		DB:       configureDB(),
+		HostPort:       "8091",
+		DB:             configureDB(),
+		KeyCloakConfig: moneymakergocloak.NewConfiguration(),
 	}
 }
 

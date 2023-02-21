@@ -1,7 +1,9 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
+	"github.com/factotum/moneymaker/user-service/pkg/user"
 	"log"
 	"net/http"
 
@@ -12,28 +14,29 @@ import (
 )
 
 type App struct {
-	Router  *chi.Mux
-	Server  *http.Server
-	Context *config.Context
+	Router         *chi.Mux
+	Server         *http.Server
+	DB             *sql.DB
+	Config         *config.Config
+	UserRepository user.Repository
+	UserHandler    *user.Handler
 }
 
 func (a *App) Initialize(configuration *config.Config) {
-	db := connectToDB(configuration)
-
-	a.Context = &config.Context{
-		DB:     db,
-		Config: configuration,
-	}
+	a.DB = connectToDB(configuration)
+	a.Config = configuration
+	a.UserRepository = user.NewPostgresRepository(a.DB)
+	a.UserHandler = user.NewHandler(a.UserRepository)
 	a.Server = &http.Server{
 		Addr:    fmt.Sprintf(":%s", configuration.HostPort),
-		Handler: routes.CreateRoutes(a.Context),
+		Handler: routes.CreateRoutes(configuration, a.UserHandler),
 	}
-	performDbMigration(db, configuration)
+	performDbMigration(a.DB, configuration)
 }
 
 func (a *App) Run() {
 
-	defer a.Context.DB.Close()
+	defer a.DB.Close()
 
 	err := a.Server.ListenAndServe()
 	if err != nil {
