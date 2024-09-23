@@ -24,7 +24,7 @@ func CreateRoutes(config *config.Config, handler *user.Handler) http.Handler {
 	}))
 
 	keyCloakMiddleware := moneymakergocloak.NewMiddleWare(config.KeyCloakConfig)
-	router.Use(keyCloakMiddleware.VerifyToken)
+	router.Use(keyCloakMiddleware.AuthorizeHttpRequest)
 	router.Use(middleware.Heartbeat("/ping"))
 
 	user.AddRoutes(router, handler)
