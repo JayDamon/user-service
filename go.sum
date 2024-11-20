@@ -46,6 +46,8 @@ github.com/jaydamon/http-toolbox v0.0.0-20230114132444-809dfa8092f7 h1:VHgJX++Jy
 github.com/jaydamon/http-toolbox v0.0.0-20230114132444-809dfa8092f7/go.mod h1:uA4pMkA4cbZmtH6aQYUwNRij8O3BPAF6/9Bpy1+AHBA=
 github.com/jaydamon/moneymakergocloak v0.0.0-20240923120148-885403db864d h1:p7DRs7xJzs3jL/XZJZPkNEOMaRx5U+XLezmbwnqsRQ4=
 github.com/jaydamon/moneymakergocloak v0.0.0-20240923120148-885403db864d/go.mod h1:x6b+ExvryOJLa1TZJAKPQexYH9d3J9E5FimhEDe51jA=
+github.com/jaydamon/moneymakerrabbit v0.0.0-20240923194752-716a0e02e5c7 h1:2kan+vuJjvfZ62q9FZQEYewIDRbiNA7OS0/2zkmCx0g=
+github.com/jaydamon/moneymakerrabbit v0.0.0-20240923194752-716a0e02e5c7/go.mod h1:ffkAfdFIQxtOtYlAC6xMmCwuEirS450GGjSostK+o4I=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/moby/docker-image-spec v1.3.1 h1:jMKff3w6PgbfSa69GfNg+zN/XLhfXJGnEx3Nl2EsFP0=

@@ -68,7 +68,7 @@ func (repository *PostgresRepository) CreateUser(user *User) error {
 func (repository *PostgresRepository) GetUserAccountTokensByUserId(userId *uuid.UUID) ([]*AccountToken, error) {
 
 	db := repository.Conn
-	statement := `SELECT user_id, private_token, item_id FROM user_account_token WHERE user_id = $1`
+	statement := `SELECT user_id, private_token, item_id, cursor FROM user_account_token WHERE user_id = $1`
 
 	log.Printf("Running query: %s\nValues: userId = %s\n", statement, userId)
 
@@ -81,7 +81,7 @@ func (repository *PostgresRepository) GetUserAccountTokensByUserId(userId *uuid.
 	tokens := make([]*AccountToken, 0)
 	for results.Next() {
 		var token AccountToken
-		err := results.Scan(&token.UserID, &token.PrivateToken, &token.ItemID)
+		err := results.Scan(&token.UserId, &token.PrivateToken, &token.ItemID, &token.Cursor)
 		if err != nil {
 			log.Printf("error caused while scanning results of query\nQuery: %s\nError: %s\n", statement, err)
 			return nil, err
@@ -97,11 +97,26 @@ func (repository *PostgresRepository) CreateUserAccountToken(accountToken *Accou
 	db := repository.Conn
 
 	statement := `INSERT INTO user_account_token (user_id, private_token, item_id) VALUES($1, $2, $3)`
-	log.Printf("Running query: %s\nValues: userID = %s, privateToken = %s, itemId = %s\n", statement, accountToken.UserID.String(), *accountToken.PrivateToken, *accountToken.ItemID) // Turn into debug statement
-	_, err := db.Exec(statement, accountToken.UserID, accountToken.PrivateToken, accountToken.ItemID)
+	log.Printf("Running query: %s\nValues: userID = %s, privateToken = %s, itemId = %s\n", statement, accountToken.UserId.String(), *accountToken.PrivateToken, *accountToken.ItemID) // Turn into debug statement
+	_, err := db.Exec(statement, accountToken.UserId, accountToken.PrivateToken, accountToken.ItemID)
 	if err != nil {
 		jsonAccountToken, _ := json.Marshal(accountToken)
 		fmt.Println("Error creating new user account token", jsonAccountToken, err)
+		return err
+	}
+
+	return nil
+}
+
+func (repository *PostgresRepository) UpdateUserAccountToken(accountToken *AccountToken) error {
+
+	db := repository.Conn
+	statement := `UPDATE user_account_token SET cursor = $1 where user_id = $2 and item_id = $3`
+	log.Printf("Running query: %s\nValues: cursor = %s, userID = %s, itemId = %s\n", statement, *accountToken.Cursor, accountToken.UserId.String(), *accountToken.ItemID) // Turn into debug statement
+	_, err := db.Exec(statement, accountToken.Cursor, accountToken.UserId, accountToken.ItemID)
+	if err != nil {
+		jsonAccountToken, _ := json.Marshal(accountToken)
+		fmt.Println("Error updating cursor for account token", jsonAccountToken, err)
 		return err
 	}
 

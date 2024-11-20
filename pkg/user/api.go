@@ -28,7 +28,7 @@ func (handler *Handler) CreatePrivateAccessToken(w http.ResponseWriter, r *http.
 
 	httptoolbox.ReadJsonBodyToVariable(w, r, &usrToken)
 
-	if usrToken.UserID == nil {
+	if usrToken.UserId == nil {
 		msg := "valid user id must be provided"
 		log.Println(msg)
 		httptoolbox.RespondError(w, http.StatusBadRequest, msg)
@@ -45,18 +45,18 @@ func (handler *Handler) CreatePrivateAccessToken(w http.ResponseWriter, r *http.
 		return
 	}
 
-	if pathUuid != *usrToken.UserID {
+	if pathUuid != *usrToken.UserId {
 		msg := "user id from body does not match path variable"
-		log.Println(msg, fmt.Sprintf("body was '%s' and path was '%s'", usrToken.UserID, userId))
+		log.Println(msg, fmt.Sprintf("body was '%s' and path was '%s'", usrToken.UserId, userId))
 		httptoolbox.RespondError(w, http.StatusBadRequest, msg)
 		return
 	}
 
 	repository := handler.UserRepository
-	usr, err := repository.GetUserById(usrToken.UserID)
+	usr, err := repository.GetUserById(usrToken.UserId)
 	if err != nil {
 		if err != sql.ErrNoRows {
-			msg := fmt.Sprintf("Unable to create user with id %s", usrToken.UserID)
+			msg := fmt.Sprintf("Unable to create user with id %s", usrToken.UserId)
 			log.Println(msg, err)
 			httptoolbox.RespondError(w, http.StatusInternalServerError, msg)
 			return
@@ -66,7 +66,7 @@ func (handler *Handler) CreatePrivateAccessToken(w http.ResponseWriter, r *http.
 
 	if usr.ID == nil {
 		fmt.Println("Creating new user")
-		usr.ID = usrToken.UserID
+		usr.ID = usrToken.UserId
 		err = repository.CreateUser(usr)
 		if err != nil {
 			httptoolbox.RespondError(w, http.StatusInternalServerError, err.Error())

@@ -5,29 +5,29 @@ import (
 	"github.com/google/uuid"
 )
 
-type testRepository struct {
+type TestRepository struct {
 	userExists    bool
 	accountTokens []*AccountToken
 }
 
-func newTestRepository() *testRepository {
-	return &testRepository{
+func newTestRepository() *TestRepository {
+	return &TestRepository{
 		userExists: true,
 	}
 }
 
-func newTestRepositoryUserDoesNotExist() *testRepository {
-	return &testRepository{
+func newTestRepositoryUserDoesNotExist() *TestRepository {
+	return &TestRepository{
 		userExists:    false,
 		accountTokens: make([]*AccountToken, 0),
 	}
 }
 
-func (repository *testRepository) mockTokens(tokens []*AccountToken) {
+func (repository *TestRepository) mockTokens(tokens []*AccountToken) {
 	repository.accountTokens = tokens
 }
 
-func (repository *testRepository) GetUserById(id *uuid.UUID) (*User, error) {
+func (repository *TestRepository) GetUserById(id *uuid.UUID) (*User, error) {
 	if repository.userExists {
 		user := &User{}
 		user.ID = id
@@ -36,14 +36,18 @@ func (repository *testRepository) GetUserById(id *uuid.UUID) (*User, error) {
 	return nil, sql.ErrNoRows
 }
 
-func (repository *testRepository) CreateUser(user *User) error {
+func (repository *TestRepository) CreateUser(user *User) error {
 	return nil
 }
 
-func (repository *testRepository) GetUserAccountTokensByUserId(userId *uuid.UUID) ([]*AccountToken, error) {
+func (repository *TestRepository) GetUserAccountTokensByUserId(userId *uuid.UUID) ([]*AccountToken, error) {
 	return repository.accountTokens, nil
 }
 
-func (repository *testRepository) CreateUserAccountToken(accountToken *AccountToken) error {
+func (repository *TestRepository) CreateUserAccountToken(accountToken *AccountToken) error {
+	return nil
+}
+
+func (repository *TestRepository) UpdateUserAccountToken(accountToken *AccountToken) error {
 	return nil
 }
