@@ -9,7 +9,7 @@ CREATE TABLE user_account_token (
   user_id uuid not null,
   private_token varchar,
   item_id varchar,
-  cursor varchar,
+  plaid_cursor varchar,
   PRIMARY KEY (user_id, item_id),
   FOREIGN KEY (user_id) REFERENCES app_user (user_id)
 );

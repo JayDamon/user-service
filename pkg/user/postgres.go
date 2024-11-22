@@ -68,7 +68,7 @@ func (repository *PostgresRepository) CreateUser(user *User) error {
 func (repository *PostgresRepository) GetUserAccountTokensByUserId(userId *uuid.UUID) ([]*AccountToken, error) {
 
 	db := repository.Conn
-	statement := `SELECT user_id, private_token, item_id, cursor FROM user_account_token WHERE user_id = $1`
+	statement := `SELECT user_id, private_token, item_id, plaid_cursor FROM user_account_token WHERE user_id = $1`
 
 	log.Printf("Running query: %s\nValues: userId = %s\n", statement, userId)
 
@@ -111,7 +111,7 @@ func (repository *PostgresRepository) CreateUserAccountToken(accountToken *Accou
 func (repository *PostgresRepository) UpdateUserAccountToken(accountToken *AccountToken) error {
 
 	db := repository.Conn
-	statement := `UPDATE user_account_token SET cursor = $1 where user_id = $2 and item_id = $3`
+	statement := `UPDATE user_account_token SET plaid_cursor = $1 where user_id = $2 and item_id = $3`
 	log.Printf("Running query: %s\nValues: cursor = %s, userID = %s, itemId = %s\n", statement, *accountToken.Cursor, accountToken.UserId.String(), *accountToken.ItemID) // Turn into debug statement
 	_, err := db.Exec(statement, accountToken.Cursor, accountToken.UserId, accountToken.ItemID)
 	if err != nil {

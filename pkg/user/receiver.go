@@ -32,7 +32,7 @@ func NewReceiver(
 
 func (receiver CursorReceiver) HandleCursorUpdateEvent(msg *amqp091.Delivery) {
 
-	log.Println("Received Message from account-refresh queue")
+	log.Println("Received Message from update_cursor queue")
 
 	err := receiver.goCloakMiddleWare.AuthorizeMessage(msg)
 	if err != nil {
