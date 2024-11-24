@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/factotum/moneymaker/user-service/pkg/user"
+	"github.com/jaydamon/moneymakerrabbit"
 	"log"
 	"net/http"
 
@@ -14,12 +15,13 @@ import (
 )
 
 type App struct {
-	Router         *chi.Mux
-	Server         *http.Server
-	DB             *sql.DB
-	Config         *config.Config
-	UserRepository user.Repository
-	UserHandler    *user.Handler
+	Router           *chi.Mux
+	Server           *http.Server
+	DB               *sql.DB
+	Config           *config.Config
+	UserRepository   user.Repository
+	UserHandler      *user.Handler
+	RabbitConnection moneymakerrabbit.Connector
 }
 
 func (a *App) Initialize(configuration *config.Config) {
@@ -32,6 +34,7 @@ func (a *App) Initialize(configuration *config.Config) {
 		Handler: routes.CreateRoutes(configuration, a.UserHandler),
 	}
 	performDbMigration(a.DB, configuration)
+	a.RabbitConnection = a.Config.Rabbit.Connect()
 }
 
 func (a *App) Run() {

@@ -24,7 +24,6 @@ func connectToDB(config *config.Config) *sql.DB {
 
 	for {
 		db, err := sql.Open("postgres", psqlInfo)
-		// FIXME: This is not working properly. It continues on even when the connection fails
 		if err != nil {
 			log.Println("Postgres not yet ready ...")
 			counts++

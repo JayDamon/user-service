@@ -16,7 +16,9 @@ func main() {
 
 	app.Initialize(config)
 
-	log.Printf("Starting service on port %s\n", config.HostPort)
+	defer app.RabbitConnection.Close()
+	app.InitializeRabbitReceivers()
 
+	log.Printf("Starting service on port %s\n", config.HostPort)
 	app.Run()
 }

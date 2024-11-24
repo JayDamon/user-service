@@ -23,7 +23,7 @@ func TestHandler_CreatePrivateAccessToken_SuccessPathUserExists(t *testing.T) {
 	userId := uuid.New()
 
 	token := &AccountToken{
-		UserID: &userId,
+		UserId: &userId,
 	}
 
 	body, _ := json.Marshal(token)
@@ -48,7 +48,7 @@ func TestHandler_CreatePrivateAccessToken_SuccessPathUserDoesNotExist(t *testing
 	userId := uuid.New()
 
 	token := &AccountToken{
-		UserID: &userId,
+		UserId: &userId,
 	}
 
 	body, _ := json.Marshal(token)
@@ -94,7 +94,7 @@ func TestHandler_CreatePrivateAccessToken_BodyUserIdDoesNotMatchPath(t *testing.
 	userId := uuid.New()
 
 	token := &AccountToken{
-		UserID: &userId,
+		UserId: &userId,
 	}
 
 	body, _ := json.Marshal(token)
@@ -119,7 +119,7 @@ func TestHandler_CreatePrivateAccessToken_BodyPathContainsInvalidUUID(t *testing
 	userId := uuid.New()
 
 	token := &AccountToken{
-		UserID: &userId,
+		UserId: &userId,
 	}
 
 	body, _ := json.Marshal(token)
@@ -140,14 +140,15 @@ func TestHandler_CreatePrivateAccessToken_BodyPathContainsInvalidUUID(t *testing
 func TestHandler_GetPrivateAccessTokens_HappyPath(t *testing.T) {
 
 	handler := createTestHandler(true)
-	testRepo := (handler.UserRepository).(*testRepository)
+	testRepo := (handler.UserRepository).(*TestRepository)
 
 	userId := uuid.New()
 
 	accountTokens := make([]*AccountToken, 0)
 	token := "testToken"
 	itemId := "testItemId"
-	accountTokens = append(accountTokens, &AccountToken{UserID: &userId, PrivateToken: &token, ItemID: &itemId})
+	cursor := "testCursor"
+	accountTokens = append(accountTokens, &AccountToken{UserId: &userId, PrivateToken: &token, ItemID: &itemId, Cursor: &cursor})
 
 	testRepo.mockTokens(accountTokens)
 
@@ -164,7 +165,7 @@ func TestHandler_GetPrivateAccessTokens_HappyPath(t *testing.T) {
 	assert.Nil(t, err, "There should be no error")
 	assert.NotEmpty(t, data, "Body must not be null")
 
-	assert.Equal(t, fmt.Sprintf("[{\"id\":\"%s\",\"privateToken\":\"%s\",\"itemId\":\"%s\"}]", userId, token, itemId), string(data))
+	assert.Equal(t, fmt.Sprintf("[{\"id\":\"%s\",\"privateToken\":\"%s\",\"itemId\":\"%s\",\"cursor\":\"%s\"}]", userId, token, itemId, cursor), string(data))
 
 }
 

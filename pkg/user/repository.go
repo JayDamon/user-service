@@ -7,4 +7,5 @@ type Repository interface {
 	CreateUser(user *User) error
 	GetUserAccountTokensByUserId(userId *uuid.UUID) ([]*AccountToken, error)
 	CreateUserAccountToken(accountToken *AccountToken) error
+	UpdateUserAccountToken(accountToken *AccountToken) error
 }

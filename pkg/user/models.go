@@ -7,7 +7,8 @@ type User struct {
 }
 
 type AccountToken struct {
-	UserID       *uuid.UUID `json:"id"`
+	UserId       *uuid.UUID `json:"id"`
 	PrivateToken *string    `json:"privateToken"`
 	ItemID       *string    `json:"itemId"`
+	Cursor       *string    `json:"cursor"`
 }
