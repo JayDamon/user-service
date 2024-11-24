@@ -10,7 +10,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/google/uuid v1.6.0
 	github.com/jaydamon/http-toolbox v0.0.0-20230114132444-809dfa8092f7
-	github.com/jaydamon/moneymakergocloak v0.0.0-20241123032700-1b410e5963a0
+	github.com/jaydamon/moneymakergocloak v0.0.0-20241124144423-22e640e44b0b
 	github.com/jaydamon/moneymakerrabbit v0.0.0-20241124135451-fe7a747f60ab
 	github.com/lib/pq v1.10.9
 	github.com/rabbitmq/amqp091-go v1.10.0
