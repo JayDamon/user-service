@@ -11,6 +11,7 @@ import (
 
 type Config struct {
 	HostPort       string
+	ConfigureCors  bool
 	DB             *DBConfig
 	KeyCloakConfig *moneymakergocloak.Configuration
 	Rabbit         *moneymakerrabbit.Configuration
@@ -27,8 +28,12 @@ type DBConfig struct {
 }
 
 func GetConfig() *Config {
+
+	configureCors := getOrDefaultBool("CONFIGURE_CORS", true)
+
 	return &Config{
 		HostPort:       "8091",
+		ConfigureCors:  configureCors,
 		DB:             configureDB(),
 		KeyCloakConfig: moneymakergocloak.NewConfiguration(),
 		Rabbit:         moneymakerrabbit.NewConfiguration(),
@@ -64,4 +69,16 @@ func getOrDefault(envVar string, defaultVal string) string {
 		return defaultVal
 	}
 	return val
+}
+
+func getOrDefaultBool(envVar string, defaultVal bool) bool {
+	val := os.Getenv(envVar)
+	var returnVal = defaultVal
+	if val == "true" {
+		returnVal = true
+	} else if val == "false" {
+		returnVal = false
+	}
+
+	return returnVal
 }

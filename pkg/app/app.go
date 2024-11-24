@@ -31,7 +31,7 @@ func (a *App) Initialize(configuration *config.Config) {
 	a.UserHandler = user.NewHandler(a.UserRepository)
 	a.Server = &http.Server{
 		Addr:    fmt.Sprintf(":%s", configuration.HostPort),
-		Handler: routes.CreateRoutes(configuration, a.UserHandler),
+		Handler: routes.CreateRoutes(configuration, a.UserHandler, a.Config.ConfigureCors),
 	}
 	performDbMigration(a.DB, configuration)
 	a.RabbitConnection = a.Config.Rabbit.Connect()

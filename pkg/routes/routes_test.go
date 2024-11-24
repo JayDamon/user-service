@@ -14,7 +14,7 @@ func TestCreateRoutes_RoutesExist(t *testing.T) {
 
 	userApiHandler := user.Handler{}
 	configuration := config.Config{}
-	routes := CreateRoutes(&configuration, &userApiHandler)
+	routes := CreateRoutes(&configuration, &userApiHandler, false)
 	chiRoutes := routes.(chi.Router)
 
 	assert.NotNil(t, chiRoutes)

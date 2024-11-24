@@ -11,16 +11,18 @@ import (
 	"github.com/go-chi/cors"
 )
 
-func CreateRoutes(config *config.Config, handler *user.Handler) http.Handler {
+func CreateRoutes(config *config.Config, handler *user.Handler, configureCors bool) http.Handler {
 	router := chi.NewRouter()
 
-	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://*", "http://*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		AllowCredentials: true,
-		MaxAge:           300,
-	}))
+	if configureCors {
+		router.Use(cors.Handler(cors.Options{
+			AllowedOrigins:   []string{"https://*", "http://*"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			AllowCredentials: true,
+			MaxAge:           300,
+		}))
+	}
 
 	keyCloakMiddleware := moneymakergocloak.NewMiddleWare(config.KeyCloakConfig)
 	router.Use(keyCloakMiddleware.AuthorizeHttpRequest)
