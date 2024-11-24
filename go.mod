@@ -10,17 +10,17 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/google/uuid v1.6.0
 	github.com/jaydamon/http-toolbox v0.0.0-20230114132444-809dfa8092f7
-	github.com/jaydamon/moneymakergocloak v0.0.0-20240923120148-885403db864d
-	github.com/jaydamon/moneymakerrabbit v0.0.0-20241121142730-fabda18e7920
+	github.com/jaydamon/moneymakergocloak v0.0.0-20241123032700-1b410e5963a0
+	github.com/jaydamon/moneymakerrabbit v0.0.0-20241124135451-fe7a747f60ab
 	github.com/lib/pq v1.10.9
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
 	github.com/Nerzal/gocloak/v12 v12.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/go-resty/resty/v2 v2.16.1 // indirect
+	github.com/go-resty/resty/v2 v2.16.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
